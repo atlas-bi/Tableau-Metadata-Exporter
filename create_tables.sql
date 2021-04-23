@@ -1,45 +1,46 @@
 USE [TableauSQL]
 GO
-
-SET ANSI_NULLS ON
+SET
+  ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER ON
+SET
+  QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Groups](
+  CREATE TABLE [dbo].[Groups](
     [UserID] [int] NULL,
     [GroupName] [nvarchar](max) NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-
-SET ANSI_NULLS ON
+SET
+  ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER ON
+SET
+  QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Hierarchy](
+  CREATE TABLE [dbo].[Hierarchy](
     [ParentID] [nvarchar](max) NULL,
     [ChildID] [nvarchar](max) NULL,
     [Index] [int] NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-
-SET ANSI_NULLS ON
+SET
+  ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER ON
+SET
+  QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Query](
+  CREATE TABLE [dbo].[Query](
     [ReportId] [nvarchar](max) NULL,
     [Query] [nvarchar](max) NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-
-SET ANSI_NULLS ON
+SET
+  ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER ON
+SET
+  QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Reports](
+  CREATE TABLE [dbo].[Reports](
     [Type] [nvarchar](max) NULL,
     [ID] [int] NULL,
     [Name] [nvarchar](max) NULL,
@@ -49,29 +50,28 @@ CREATE TABLE [dbo].[Reports](
     [Index] [int] NULL,
     [URL] [nvarchar](max) NULL,
     [WorkbookName] [nvarchar](max) NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-
-SET ANSI_NULLS ON
+SET
+  ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER ON
+SET
+  QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[RunData](
+  CREATE TABLE [dbo].[RunData](
     [EventDate] [datetime] NULL,
     [UserID] [int] NULL,
     [DashboardID] [int] NULL
-) ON [PRIMARY]
-
+  ) ON [PRIMARY]
 GO
-
-SET ANSI_NULLS ON
+SET
+  ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER ON
+SET
+  QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Users](
+  CREATE TABLE [dbo].[Users](
     [UserID] [int] NULL,
     [Username] [nvarchar](max) NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
+  ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO

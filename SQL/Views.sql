@@ -1,12 +1,13 @@
 select
-	views.id,
-	views.name,
-	'https://eptblp01.riversidehealthcare.net/#/views/' || workbooks.repository_url || '/' || views.sheet_id,
-	views.created_at AT TIME ZONE 'UTC' AT TIME ZONE 'US/Central',
-	views.updated_at AT TIME ZONE 'UTC' AT TIME ZONE 'US/Central',
-	views.index,
-	views.owner_id
+  views.id,
+  views.name,
+  'https://tableau/#/views/' || workbooks.repository_url || '/' || views.sheet_id,
+  views.created_at AT TIME ZONE 'UTC' AT TIME ZONE 'US/Central',
+  views.updated_at AT TIME ZONE 'UTC' AT TIME ZONE 'US/Central',
+  views.index,
+  views.owner_id
 from
-	views
-left outer join workbooks on workbooks.id=views.workbook_id
-where sheettype='dashboard'
+  views
+  left outer join workbooks on workbooks.id = views.workbook_id
+where
+  sheettype = 'dashboard'
