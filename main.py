@@ -1,4 +1,4 @@
-"""This file moves stuff from Tableau to Atlas."""
+"""Tableau metadata exporter script."""
 import fnmatch
 import os
 import shutil
@@ -9,8 +9,9 @@ from zipfile import ZipFile
 import paramiko
 import psycopg2
 import pyodbc
-import settings
 from lxml import etree  # noqa: S410
+
+import settings
 
 session = paramiko.SSHClient()
 session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -122,18 +123,18 @@ cur = connection.cursor()
 
 cur.execute(
     """
-    DELETE FROM dbo.Query WHERE 1=1;
-    DELETE FROM dbo.Hierarchy WHERE 1=1;
-    DELETE FROM dbo.Groups WHERE 1=1;
-    DELETE FROM dbo.Users WHERE 1=1;
-    DELETE FROM dbo.RunData WHERE 1=1;
-    DELETE FROM dbo.Reports WHERE 1=1;
+    DELETE FROM [raw].[tableau-queries] WHERE 1=1;
+    DELETE FROM [raw].[tableau-hierarchy] WHERE 1=1;
+    DELETE FROM [raw].[tableau-groups] WHERE 1=1;
+    DELETE FROM [raw].[tableau-users] WHERE 1=1;
+    DELETE FROM [raw].[tableau-rundata] WHERE 1=1;
+    DELETE FROM [raw].[tableau-reports] WHERE 1=1;
     """
 )
 
 for sql in output:
     cur.execute(
-        "INSERT INTO dbo.Query (ReportId, Query) VALUES ( ?, ? )",
+        "INSERT INTO [raw].[tableau-queries] (ReportId, Query) VALUES ( ?, ? )",
         sql["ReportId"],
         sql["sql"],
     )
@@ -150,30 +151,32 @@ for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
         results = cursor.fetchall()
 
         if fnmatch.fnmatch(my_file, "*WorkAndView.sql"):
-            sql = """INSERT INTO dbo.Hierarchy
+            sql = """INSERT INTO [raw].[tableau-hierarchy]
             (ParentID, ChildID, [Index]) VALUES (?, ?, ?)"""
             cur.executemany(sql, results)
             cur.commit()
 
         elif fnmatch.fnmatch(my_file, "*Groups.sql"):
-            sql = """INSERT INTO dbo.Groups (UserID, GroupName) VALUES (?, ?)"""
+            sql = """INSERT INTO [raw].[tableau-groups] (UserID, GroupName) VALUES (?, ?)"""
             cur.executemany(sql, results)
             cur.commit()
 
         elif fnmatch.fnmatch(my_file, "*Users.sql"):
-            sql = """INSERT INTO dbo.Users (UserID, username) VALUES (?, ?)"""
+            sql = (
+                """INSERT INTO [raw].[tableau-users] (UserID, username) VALUES (?, ?)"""
+            )
             cur.executemany(sql, results)
             cur.commit()
 
         elif fnmatch.fnmatch(my_file, "*RunData.sql"):
-            sql = """INSERT INTO dbo.RunData
+            sql = """INSERT INTO [raw].[tableau-rundata]
             (EventDate, UserID, DashboardID) VALUES (?, ?, ?)"""
             cur.executemany(sql, results)
             cur.commit()
 
         elif fnmatch.fnmatch(my_file, "*Views.sql"):
             sql = """
-                INSERT INTO dbo.Reports
+                INSERT INTO [raw].[tableau-reports]
                 (Type, ID, Name, URL, Created, Updated, [Index], OwnerID)
                 VALUES ('Dashboard', ?, ?, ?, ?, ?, ?, ?)
                 """
@@ -182,7 +185,7 @@ for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
 
         elif fnmatch.fnmatch(my_file, "*Workbooks.sql"):
             sql = """
-                INSERT INTO dbo.Reports
+                INSERT INTO [raw].[tableau-reports]
                 (Type, ID, Name, Description, Created, Updated, URL, WorkbookName, OwnerID)
                 VALUES ('Workbook', ?, ?, ?, ?, ?, ?, ?, ?)
                 """

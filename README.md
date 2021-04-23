@@ -1,4 +1,8 @@
-# Tableau
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b6bec0c189e240228baca3941e851e5b)](https://www.codacy.com/gh/Riverside-Healthcare/Tableau-Metadata-Exporter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Riverside-Healthcare/Tableau-Metadata-Exporter&amp;utm_campaign=Badge_Grade)
+[![CodeQL](https://github.com/Riverside-Healthcare/Tableau-Metadata-Exporter/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Riverside-Healthcare/Tableau-Metadata-Exporter/actions/workflows/codeql-analysis.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/3297bc558ec0f992b9ce/maintainability)](https://codeclimate.com/github/Riverside-Healthcare/Tableau-Metadata-Exporter/maintainability)
+
+# Tableau Metadata Exporter
 
 ## About
 
@@ -7,11 +11,12 @@ Tableau runs a Python script that pulls and parses XML data from PSQL readonly T
 ### What It Does
 
 It logs in to the Tableau server and connects to the Tableau PSQL Admin account in the workgroup database. 
-1) The query will create .twbx and .twb files containing SQL queries related to the workbooks stored in Tableau
-2) The files retrieved are placed in the "TwbxFiles" folder and any zipped folders are unzipped
-3) All XML files are parsed and the server, database name, and SQL queries are pulled from each along with the the respective workbook
-4) Connection to SQL database is established to hold Tableau data. All tables are truncated so as not to duplicate data
-5) All PSQL queries are run and data pulled is stored in SQl tables
+
+ 1) The query will create .twbx and .twb files containing SQL queries related to the workbooks stored in Tableau
+ 2) The files retrieved are placed in the "TwbxFiles" folder and any zipped folders are unzipped
+ 3) All XML files are parsed and the server, database name, and SQL queries are pulled from each along with the the respective workbook
+ 4) Connection to SQL database is established to hold Tableau data. All tables are truncated so as not to duplicate data
+ 5) All PSQL queries are run and data pulled is stored in SQl tables
 
 ## How To Run
 
@@ -19,23 +24,20 @@ It logs in to the Tableau server and connects to the Tableau PSQL Admin account 
 
 This script uses poetry as the python package manager so if not installed try this link - https://python-poetry.org/docs/
 
-
 ### Next, install Python packages
 Since this script utilizes poetry, just run:
 ```sh
 poetry install
 ```
-
 ### Create Database
 
 ```SQL
 CREATE DATABASE [TableauSQL]
  GO
 ```
-
 ### Create Tables
 
-Run ```create_tables.sql```
+Run create_tables.sql
 
 ### Create settings.py file
 
@@ -64,7 +66,6 @@ poetry run python main.py
 ```
 
 ## Additional Information
-
 
 Some of the PSQL queries that are run look at user and group data. To access these tables, try this link - https://github.com/tableau/community-tableau-server-insights. The user data is mostly found in the ts_users data source.
 

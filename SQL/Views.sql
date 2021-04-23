@@ -1,9 +1,9 @@
 select
 	views.id,
 	views.name,
-	'https://tableau_server/#/views/' || workbooks.repository_url || '/' || views.sheet_id,
-	views.created_at,
-	views.updated_at,
+	'https://eptblp01.riversidehealthcare.net/#/views/' || workbooks.repository_url || '/' || views.sheet_id,
+	views.created_at AT TIME ZONE 'UTC' AT TIME ZONE 'US/Central',
+	views.updated_at AT TIME ZONE 'UTC' AT TIME ZONE 'US/Central',
 	views.index,
 	views.owner_id
 from
