@@ -12,11 +12,11 @@ Tableau runs a Python script that pulls and parses XML data from PSQL readonly T
 
 It logs in to the Tableau server and connects to the Tableau PSQL Admin account in the workgroup database.
 
-1. The query will create .twbx and .twb files containing SQL queries related to the workbooks stored in Tableau
-2. The files retrieved are placed in the "TwbxFiles" folder and any zipped folders are unzipped
-3. All XML files are parsed and the server, database name, and SQL queries are pulled from each along with the the respective workbook
-4. Connection to SQL database is established to hold Tableau data. All tables are truncated so as not to duplicate data
-5. All PSQL queries are run and data pulled is stored in SQl tables
+1.  The query will create .twbx and .twb files containing SQL queries related to the workbooks stored in Tableau
+2.  The files retrieved are placed in the "TwbxFiles" folder and any zipped folders are unzipped
+3.  All XML files are parsed and the server, database name, and SQL queries are pulled from each along with the the respective workbook
+4.  Connection to SQL database is established to hold Tableau data. All tables are truncated so as not to duplicate data
+5.  All PSQL queries are run and data pulled is stored in SQl tables
 
 ## How To Run
 
