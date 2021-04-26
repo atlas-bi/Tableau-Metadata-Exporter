@@ -45,7 +45,21 @@ Run create_tables.sql
 
 ### Create settings.py file
 
+For the settings.py file, the Tableau admin and readonly passwords will be needed.
+
+Navigate to the Tableau server and open command prompt.
 ```py
+cd C:\Program Files\Tableau\Tableau Server\packages\pgsql.<version>\bin
+
+#to retrieve the Tableau admin password
+tsm configuration get -k pgsql.adminpassword
+
+#to retrieve the readonly password
+tsm configuration get -k pgsql.readonly_password
+```
+
+```py
+# readonly account
 PSQL_Server = ("dbname=database_name user=username host=hostname password=password port=port")
 
 SQL_Server = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=server_name;DATABASE=database_name;UID=username;PWD=password"
@@ -54,9 +68,10 @@ SSH_Host = "SSH_server_name"
 SSH_Username = "username"
 SSH_Password = "password"
 
+# admin account
 PSQL_Admin = '"host=host port=port dbname=database_name user=username password=password"'
 
-Sleep = number of seconds
+Sleep: int = 5 # number of seconds
 
 # this is the path to the psql executable on the Tableau server
 Path_to_PSQL = (
