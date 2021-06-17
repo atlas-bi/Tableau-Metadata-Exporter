@@ -9,9 +9,8 @@ from zipfile import ZipFile
 import paramiko
 import psycopg2
 import pyodbc
-from lxml import etree  # noqa: S410
-
 import settings
+from lxml import etree  # noqa: S410
 
 session = paramiko.SSHClient()
 session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -94,7 +93,9 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
         )
 
         for node in connection.getchildren():
-            if node.tag.endswith("relation"):
+
+            # relations with query
+            if node.tag.endswith("relation") and node.text:
                 this_conn = {}
                 this_conn["sql"] = (
                     server
@@ -109,13 +110,44 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
                     + ((" name: " + node.get("name")) if node.get("name") else "")
                     + ((" table: " + node.get("table")) if node.get("table") else "")
                     + "*/"
-                    + (node.text or "")
+                    + (node.text)
                 )
                 this_conn["ReportId"] = (
                     tree.getroot().find("repository-location").get("id")
                 )
                 output.append(this_conn)
 
+            # relations with child queries
+            elif node.tag.endswith("relation") and node.findall("relation"):
+                for childnode in node.findall("relation"):
+                    this_conn = {}
+                    this_conn["sql"] = (
+                        server
+                        + dbname
+                        + (query_info.get("one-time-sql") or "")
+                        + "\n\n/*"
+                        + (
+                            ("connection: " + childnode.get("connection"))
+                            if childnode.get("connection")
+                            else ""
+                        )
+                        + (
+                            (" name: " + childnode.get("name"))
+                            if childnode.get("name")
+                            else ""
+                        )
+                        + (
+                            (" table: " + childnode.get("table"))
+                            if childnode.get("table")
+                            else ""
+                        )
+                        + "*/"
+                        + (childnode.text)
+                    )
+                    this_conn["ReportId"] = (
+                        tree.getroot().find("repository-location").get("id")
+                    )
+                    output.append(this_conn)
 
 connection = pyodbc.connect(settings.SQL_Server)
 
