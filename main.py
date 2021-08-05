@@ -60,71 +60,48 @@ parser = etree.XMLParser(ns_clean=True, recover=True)
 
 output = []
 
+
 for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
     tree = etree.parse(str(my_file), parser=parser)  # noqa: S320
 
     for datasource in tree.getroot().find("datasources").findall("datasource"):
         connection = datasource.find("connection")
-
         if connection is None:
             continue
         named_connections = connection.find("named-connections")
 
         if named_connections is None:
             continue
-        named_connection = named_connections.find("named-connection")
+        dict_db = {}
+        for node in named_connections.getchildren():
 
-        if named_connection is None:
-            continue
-        query_info = named_connection.find("connection")
+            inner_connection = node.find("connection")
 
-        if query_info is None:
-            continue
-
-        server = (
-            ("-- server: %s\n" % query_info.get("server"))
-            if query_info.get("server") is not None
-            else ""
-        )
-        dbname = (
-            ("use %s;\n" % query_info.get("dbname"))
-            if query_info.get("dbname") is not None
-            else ""
-        )
+            dict_db[node.get("name")] = {
+                "database": (
+                    ("use %s;\n" % inner_connection.get("dbname"))
+                    if inner_connection.get("dbname") is not None
+                    else ""
+                ),
+                "server": (
+                    ("-- server: %s\n" % inner_connection.get("server"))
+                    if inner_connection.get("server") is not None
+                    else ""
+                ),
+                "one-time-sql": (inner_connection.get("one-time-sql") or ""),
+            }
 
         for node in connection.getchildren():
 
-            # relations with query
-            if node.tag.endswith("relation") and node.text:
-                this_conn = {}
-                this_conn["sql"] = (
-                    server
-                    + dbname
-                    + (query_info.get("one-time-sql") or "")
-                    + "\n\n/*"
-                    + (
-                        ("connection: " + node.get("connection"))
-                        if node.get("connection")
-                        else ""
-                    )
-                    + ((" name: " + node.get("name")) if node.get("name") else "")
-                    + ((" table: " + node.get("table")) if node.get("table") else "")
-                    + "*/"
-                    + (node.text)
-                )
-                this_conn["ReportId"] = (
-                    tree.getroot().find("repository-location").get("id")
-                )
-                output.append(this_conn)
-
             # relations with child queries
-            elif node.tag.endswith("relation") and node.findall("relation"):
+            if node.tag.endswith("relation") and node.findall("relation"):
+
                 for childnode in node.findall("relation"):
                     this_conn = {}
                     this_conn["sql"] = (
-                        server
-                        + dbname
-                        + (query_info.get("one-time-sql") or "")
+                        dict_db[childnode.get("connection")].get("server", "")
+                        + dict_db[childnode.get("connection")].get("database", "")
+                        + dict_db[childnode.get("connection")].get("one-time-sql", "")
                         + "\n\n/*"
                         + (
                             ("connection: " + childnode.get("connection"))
@@ -141,13 +118,36 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
                             if childnode.get("table")
                             else ""
                         )
-                        + "*/"
+                        + "*/\n\n"
                         + (childnode.text)
                     )
                     this_conn["ReportId"] = (
                         tree.getroot().find("repository-location").get("id")
                     )
                     output.append(this_conn)
+
+            # relations with query
+            elif node.tag.endswith("relation") and node.text:
+                this_conn = {}
+                this_conn["sql"] = (
+                    dict_db[node.get("connection")].get("server", "")
+                    + dict_db[node.get("connection")].get("database", "")
+                    + dict_db[node.get("connection")].get("one-time-sql", "")
+                    + "\n\n/*"
+                    + (
+                        ("connection: " + node.get("connection"))
+                        if node.get("connection")
+                        else ""
+                    )
+                    + ((" name: " + node.get("name")) if node.get("name") else "")
+                    + ((" table: " + node.get("table")) if node.get("table") else "")
+                    + "*/\n\n"
+                    + (node.text)
+                )
+                this_conn["ReportId"] = (
+                    tree.getroot().find("repository-location").get("id")
+                )
+                output.append(this_conn)
 
 connection = pyodbc.connect(settings.SQL_Server)
 
@@ -202,7 +202,7 @@ for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
 
         elif fnmatch.fnmatch(my_file, "*RunData.sql"):
             sql = """INSERT INTO [raw].[tableau-rundata]
-            (EventDate, UserID, DashboardID) VALUES (?, ?, ?)"""
+            (EventDate, UserID, DashboardID, Nviews, Series) VALUES (?, ?, ?, ?, ?)"""
             cur.executemany(sql, results)
             cur.commit()
 
