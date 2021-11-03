@@ -9,8 +9,9 @@ from zipfile import ZipFile
 import paramiko
 import psycopg2
 import pyodbc
-import settings
 from lxml import etree  # noqa: S410
+
+import settings
 
 session = paramiko.SSHClient()
 session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -20,26 +21,26 @@ session.connect(
     username=settings.SSH_Username,
     password=settings.SSH_Password,
 )
-channel = session.invoke_shell()
-stdin = channel.makefile("wb")
-stdout = channel.makefile("rb")
-# pylint: disable=C0301
-stdin.write(
-    r"""
-del /f /Q C:\Users\Public\ETL_SQL\
-"""
-    + settings.Path_to_PSQL
-    + r"""psql" """
-    + settings.PSQL_Admin
-    + r"""
-SELECT LO_EXPORT(OID,  'C:\Users\Public\ETL_SQL\' || REPO_TEMP.ID || '_' || REPO_TEMP.REPOSITORY_URL || LO_TEMP.FILETYPE)  FROM  (SELECT W.ID,  W.REPOSITORY_URL,  RD.CONTENT AS oid FROM WORKBOOKS W  INNER JOIN REPOSITORY_DATA RD ON COALESCE(W.DATA_ID, W.REDUCED_DATA_ID) = RD.TRACKING_ID) AS repo_temp  LEFT JOIN  (SELECT LOID,  CASE  WHEN SUBSTRING(DATA  FROM 1 FOR 4) = 'PK\003\004' THEN '.twbx' ELSE '.twb'  END AS filetype  FROM PG_LARGEOBJECT WHERE PG_LARGEOBJECT.PAGENO = 0  ) AS lo_temp ON REPO_TEMP.OID = LO_TEMP.LOID;"  # noqa: E501
-\q
-exit
-"""
+# remove old lines
+stdin, stdout, stderr = session.exec_command("del /f /Q C:\\Users\\Public\\ETL_SQL\\")
+
+if len(stderr.readlines()):
+    err = "".join(stderr.readlines())
+    raise Exception(f"Failed to remove old files.\n{err}")
+
+# note, there must be NO SPACE between your password and the "&&"!
+stdin, stdout, stderr = session.exec_command(
+    f"cd \"C:\\Program Files\\Tableau\\Tableau Server\\packages\\pgsql*\" && cd bin && SET PGPASSWORD={settings.PG_PASSWORD}& psql -U {settings.PG_USER} -a -d {settings.PG_DB} -h {settings.PG_HOST} -p {settings.PG_PORT} -c \"SELECT LO_EXPORT(OID, 'C:\\Users\\Public\\ETL_SQL\\' || REPO_TEMP.ID || '_' || REPO_TEMP.REPOSITORY_URL || LO_TEMP.FILETYPE)  FROM  (SELECT W.ID,  W.REPOSITORY_URL,  RD.CONTENT AS oid FROM WORKBOOKS W  INNER JOIN REPOSITORY_DATA RD ON COALESCE(W.DATA_ID, W.REDUCED_DATA_ID) = RD.TRACKING_ID) AS repo_temp  LEFT JOIN  (SELECT LOID,  CASE  WHEN SUBSTRING(DATA  FROM 1 FOR 4) = 'PK\\003\\004' THEN '.twbx' ELSE '.twb'  END AS filetype  FROM PG_LARGEOBJECT WHERE PG_LARGEOBJECT.PAGENO = 0  ) AS lo_temp ON REPO_TEMP.OID = LO_TEMP.LOID;\""
 )
 
-stdout.close()
-stdin.close()
+print("out")
+print("".join(stdout.readlines()))
+
+if len(stderr.readlines()):
+    err = "".join(stderr.readlines())
+    raise Exception(f"Failed to remove old files.\n{err}")
+
+
 time.sleep(settings.Sleep)
 sftp = session.open_sftp()
 sftp.chdir(r"C:\Users\Public\ETL_SQL")
@@ -59,6 +60,9 @@ for my_file in Path(__file__).parents[0].joinpath("TwbxFiles").glob("*.twbx"):
 parser = etree.XMLParser(ns_clean=True, recover=True)
 
 output = []
+
+if len(list((Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"))) < 1:
+    raise Exception("No files loaded!")
 
 
 for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
@@ -98,10 +102,15 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
 
                 for childnode in node.findall("relation"):
                     this_conn = {}
-                    this_conn["sql"] = (
+                    conn_string = (
                         dict_db[childnode.get("connection")].get("server", "")
                         + dict_db[childnode.get("connection")].get("database", "")
                         + dict_db[childnode.get("connection")].get("one-time-sql", "")
+                        if dict_db.get(childnode.get("connection"))
+                        else ""
+                    )
+                    this_conn["sql"] = (
+                        conn_string
                         + "\n\n/*"
                         + (
                             ("connection: " + childnode.get("connection"))
@@ -177,7 +186,7 @@ conn = psycopg2.connect(settings.PSQL_Server)
 cursor = conn.cursor()
 
 for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
-    with open(my_file, "r") as sql_file:
+    with open(my_file, "r", encoding="utf8") as sql_file:
         sql = sql_file.read()
         cursor.execute(sql)
         results = cursor.fetchall()

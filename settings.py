@@ -11,10 +11,10 @@ SSH_Host = "tableauServer"
 SSH_Username = "mr_cool"
 SSH_Password = "12345"
 
-PSQL_Admin = '"host=localhost port=8060 dbname=workgroup user=tblAdmin password=12345"'
+PG_PASSWORD="password"
+PG_HOST="localhost"
+PG_PORT=8060
+PG_DB="workgroup"
+PG_USER="tblwgadmin"
 
 Sleep = 5
-
-Path_to_PSQL = (
-    r'"C:\Program Files\Tableau\Tableau Server\packages\pgsql.20202.20.0721.1350\bin\\'
-)

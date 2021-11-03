@@ -69,14 +69,14 @@ SSH_Username = "username"
 SSH_Password = "password"
 
 # admin account
-PSQL_Admin = '"host=host port=port dbname=database_name user=username password=password"'
+PG_PASSWORD="password"
+PG_HOST="localhost"
+PG_PORT=8060
+PG_DB="workgroup"
+PG_USER="tblwgadmin"
 
 Sleep: int = 5 # number of seconds
 
-# this is the path to the psql executable on the Tableau server
-Path_to_PSQL = (
-    r'"\\\\network\\c$\\path\\to\\psql\\files\\'
-)
 ```
 
 ### Run
