@@ -3,23 +3,49 @@ import fnmatch
 import os
 import shutil
 import time
+import warnings
 from pathlib import Path
 from zipfile import ZipFile
+
+from cryptography.utils import CryptographyDeprecationWarning
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=CryptographyDeprecationWarning)
+from urllib.parse import urlparse
 
 import paramiko
 import psycopg2
 import pyodbc
+from dotenv import load_dotenv
 from lxml import etree  # noqa: S410
 
-import settings
+load_dotenv()
+PSQLADMIN = urlparse(
+    os.environ.get(
+        "PSQLADMIN", "postgres://tblwgadmin:password@localhost:8060/workgroup"
+    )
+)
+PSQLRO = urlparse(
+    os.environ.get("PSQLRO", "postgres://readonly:password@hostname:8060/workgroup")
+)
+SSHHOST = os.environ.get("SSHHOST", "tableauServer")
+SSHUSERNAME = os.environ.get("SSHUSERNAME", "mr_cool")
+SSHPASSWORD = os.environ.get("SSHPASSWORD", "12345")
+SLEEP = int(os.environ.get("Sleep", 5))
+TABLEAUURL = os.environ.get("TABLEAUURL", "https://tableau.example.com")
+SQLSERVER = os.environ.get(
+    "SQLSERVER",
+    "DRIVER={ODBC Driver 17 for SQL Server};SERVER=sqlServer;DATABASE=atlas_staging;UID=joe;PWD=12345",
+)
+
 
 session = paramiko.SSHClient()
 session.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 session.connect(
-    hostname=settings.SSH_Host,
+    hostname=SSHHOST,
     port=22,
-    username=settings.SSH_Username,
-    password=settings.SSH_Password,
+    username=SSHUSERNAME,
+    password=SSHPASSWORD,
 )
 # remove old lines
 stdin, stdout, stderr = session.exec_command("del /f /Q C:\\Users\\Public\\ETL_SQL\\")
@@ -30,18 +56,15 @@ if len(stderr.readlines()):
 
 # note, there must be NO SPACE between your password and the "&&"!
 stdin, stdout, stderr = session.exec_command(
-    f"cd \"C:\\Program Files\\Tableau\\Tableau Server\\packages\\pgsql*\" && cd bin && SET PGPASSWORD={settings.PG_PASSWORD}& psql -U {settings.PG_USER} -a -d {settings.PG_DB} -h {settings.PG_HOST} -p {settings.PG_PORT} -c \"SELECT LO_EXPORT(OID, 'C:\\Users\\Public\\ETL_SQL\\' || REPO_TEMP.ID || '_' || REPO_TEMP.REPOSITORY_URL || LO_TEMP.FILETYPE)  FROM  (SELECT W.ID,  W.REPOSITORY_URL,  RD.CONTENT AS oid FROM WORKBOOKS W  INNER JOIN REPOSITORY_DATA RD ON COALESCE(W.DATA_ID, W.REDUCED_DATA_ID) = RD.TRACKING_ID) AS repo_temp  LEFT JOIN  (SELECT LOID,  CASE  WHEN SUBSTRING(DATA  FROM 1 FOR 4) = 'PK\\003\\004' THEN '.twbx' ELSE '.twb'  END AS filetype  FROM PG_LARGEOBJECT WHERE PG_LARGEOBJECT.PAGENO = 0  ) AS lo_temp ON REPO_TEMP.OID = LO_TEMP.LOID;\""
+    f"cd \"C:\\Program Files\\Tableau\\Tableau Server\\packages\\pgsql*\" && cd bin && SET PGPASSWORD={PSQLADMIN.password}& psql -U {PSQLADMIN.username} -a -d {PSQLADMIN.path.replace('/','')} -h {PSQLADMIN.hostname} -p {PSQLADMIN.port} -c \"SELECT LO_EXPORT(OID, 'C:\\Users\\Public\\ETL_SQL\\' || REPO_TEMP.ID || '_' || REPO_TEMP.REPOSITORY_URL || LO_TEMP.FILETYPE)  FROM  (SELECT W.ID,  W.REPOSITORY_URL,  RD.CONTENT AS oid FROM WORKBOOKS W  INNER JOIN REPOSITORY_DATA RD ON COALESCE(W.DATA_ID, W.REDUCED_DATA_ID) = RD.TRACKING_ID) AS repo_temp  LEFT JOIN  (SELECT LOID,  CASE  WHEN SUBSTRING(DATA  FROM 1 FOR 4) = 'PK\\003\\004' THEN '.twbx' ELSE '.twb'  END AS filetype  FROM PG_LARGEOBJECT WHERE PG_LARGEOBJECT.PAGENO = 0  ) AS lo_temp ON REPO_TEMP.OID = LO_TEMP.LOID;\""
 )
-
-print("out")
-print("".join(stdout.readlines()))
 
 if len(stderr.readlines()):
     err = "".join(stderr.readlines())
     raise Exception(f"Failed to remove old files.\n{err}")
 
 
-time.sleep(settings.Sleep)
+time.sleep(SLEEP)
 sftp = session.open_sftp()
 sftp.chdir(r"C:\Users\Public\ETL_SQL")
 
@@ -137,28 +160,31 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
 
             # relations with query
             elif node.tag.endswith("relation") and node.text:
-                this_conn = {}
-                this_conn["sql"] = (
-                    dict_db[node.get("connection")].get("server", "")
-                    + dict_db[node.get("connection")].get("database", "")
-                    + dict_db[node.get("connection")].get("one-time-sql", "")
-                    + "\n\n/*"
-                    + (
-                        ("connection: " + node.get("connection"))
-                        if node.get("connection")
-                        else ""
-                    )
-                    + ((" name: " + node.get("name")) if node.get("name") else "")
-                    + ((" table: " + node.get("table")) if node.get("table") else "")
-                    + "*/\n\n"
-                    + (node.text)
-                )
-                this_conn["ReportId"] = (
-                    tree.getroot().find("repository-location").get("id")
-                )
+                this_conn = {
+                    "sql": (
+                        dict_db[node.get("connection")].get("server", "")
+                        + dict_db[node.get("connection")].get("database", "")
+                        + dict_db[node.get("connection")].get("one-time-sql", "")
+                        + "\n\n/*"
+                        + (
+                            ("connection: " + node.get("connection"))
+                            if node.get("connection")
+                            else ""
+                        )
+                        + ((" name: " + node.get("name")) if node.get("name") else "")
+                        + (
+                            (" table: " + node.get("table"))
+                            if node.get("table")
+                            else ""
+                        )
+                        + "*/\n\n"
+                        + (node.text)
+                    ),
+                    "ReportId": tree.getroot().find("repository-location").get("id"),
+                }
                 output.append(this_conn)
 
-connection = pyodbc.connect(settings.SQL_Server)
+connection = pyodbc.connect(SQLSERVER)
 
 cur = connection.cursor()
 
@@ -182,13 +208,15 @@ for sql in output:
 
 connection.commit()
 
-conn = psycopg2.connect(settings.PSQL_Server)
+conn = psycopg2.connect(
+    f"dbname={PSQLRO.path.replace('/','')} user={PSQLRO.username} host={PSQLRO.hostname} password={PSQLRO.password} port={PSQLRO.port}"
+)
 cursor = conn.cursor()
 
 for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
-    with open(my_file, "r", encoding="utf8") as sql_file:
+    with open(my_file, encoding="utf8") as sql_file:
         sql = sql_file.read()
-        cursor.execute(sql)
+        cursor.execute(sql.replace("TABLEAUURL", TABLEAUURL))
         results = cursor.fetchall()
 
         if fnmatch.fnmatch(my_file, "*WorkAndView.sql"):

@@ -1,4 +1,4 @@
-USE [TableauSQL]
+USE [atlas_staging]
 GO
 SET
   ANSI_NULLS ON
@@ -6,41 +6,23 @@ GO
 SET
   QUOTED_IDENTIFIER ON
 GO
-  CREATE TABLE [dbo].[Groups](
+  CREATE TABLE [raw].[tableau-groups](
     [UserID] [int] NULL,
     [GroupName] [nvarchar](max) NULL
   ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-SET
-  ANSI_NULLS ON
-GO
-SET
-  QUOTED_IDENTIFIER ON
-GO
-  CREATE TABLE [dbo].[Hierarchy](
+  CREATE TABLE [raw].[tableau-hierarchy](
     [ParentID] [nvarchar](max) NULL,
     [ChildID] [nvarchar](max) NULL,
     [Index] [int] NULL
   ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-SET
-  ANSI_NULLS ON
-GO
-SET
-  QUOTED_IDENTIFIER ON
-GO
-  CREATE TABLE [dbo].[Query](
+  CREATE TABLE [raw].[tableau-queries](
     [ReportId] [nvarchar](max) NULL,
     [Query] [nvarchar](max) NULL
   ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-SET
-  ANSI_NULLS ON
-GO
-SET
-  QUOTED_IDENTIFIER ON
-GO
-  CREATE TABLE [dbo].[Reports](
+  CREATE TABLE [raw].[tableau-reports](
     [Type] [nvarchar](max) NULL,
     [ID] [int] NULL,
     [Name] [nvarchar](max) NULL,
@@ -52,25 +34,13 @@ GO
     [WorkbookName] [nvarchar](max) NULL
   ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-SET
-  ANSI_NULLS ON
-GO
-SET
-  QUOTED_IDENTIFIER ON
-GO
-  CREATE TABLE [dbo].[RunData](
+  CREATE TABLE [raw].[tableau-rundata](
     [EventDate] [datetime] NULL,
     [UserID] [int] NULL,
     [DashboardID] [int] NULL
   ) ON [PRIMARY]
 GO
-SET
-  ANSI_NULLS ON
-GO
-SET
-  QUOTED_IDENTIFIER ON
-GO
-  CREATE TABLE [dbo].[Users](
+  CREATE TABLE [raw].[tableau-users](
     [UserID] [int] NULL,
     [Username] [nvarchar](max) NULL
   ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]

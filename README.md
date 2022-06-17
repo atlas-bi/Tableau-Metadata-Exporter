@@ -1,51 +1,57 @@
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b6bec0c189e240228baca3941e851e5b)](https://www.codacy.com/gh/Riverside-Healthcare/Tableau-Metadata-Exporter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Riverside-Healthcare/Tableau-Metadata-Exporter&amp;utm_campaign=Badge_Grade)
-[![CodeQL](https://github.com/Riverside-Healthcare/Tableau-Metadata-Exporter/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Riverside-Healthcare/Tableau-Metadata-Exporter/actions/workflows/codeql-analysis.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/3297bc558ec0f992b9ce/maintainability)](https://codeclimate.com/github/Riverside-Healthcare/Tableau-Metadata-Exporter/maintainability)
+<h1 align="center">Tableau Metadata Exporter</h1>
+<h4 align="center">Atlas BI Library ETL | Atlas Supplementary Tableau ETL</h4>
+<p align="center">
+    <a href="https://www.atlas.bi" target="_blank">Website</a> • <a href="https://demo.atlas.bi" target="_blank">Demo</a> • <a href="https://www.atlas.bi/docs/bi-library/" target="_blank">Documentation</a> • <a href="https://discord.gg/hdz2cpygQD" target="_blank">Chat</a>
+</p>
+<p align="center">
+ <a href="https://www.codacy.com/gh/Riverside-Healthcare/Tableau-Metadata-Exporter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Riverside-Healthcare/Tableau-Metadata-Exporter&amp;utm_campaign=Badge_Grade"><img alt="codacy" src="https://app.codacy.com/project/badge/Grade/b6bec0c189e240228baca3941e851e5b"></a>
+ <a href="https://sonarcloud.io/project/overview?id=atlas-bi_Tableau-Metadata-Exporter"><img alt="maintainability" src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_Tableau-Metadata-Exporter&metric=sqale_rating"></a>
+ <a href=""><img alt="security" src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_Tableau-Metadata-Exporter&metric=security_rating" /></a>
+ <a href="https://discord.gg/hdz2cpygQD"><img alt="discord chat" src="https://badgen.net/discord/online-members/hdz2cpygQD/" /></a>
+ <a href="https://github.com/atlas-bi/atlas-bi-library/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/Tableau-Metadata-Exporter" /></a>
+</p>
 
-# Tableau Metadata Exporter
 
-## About
+<p align="center">
+A Python script pulls and parses XML data from PSQL readonly Tableau database. This data, along with data pulled from Tableau's database, is inserted into a SQL database and is able to be run daily and inserted into Atlas.
+</p>
 
-Tableau runs a Python script that pulls and parses XML data from PSQL readonly Tableau database. This data, along with data queried from PSQL workgroup Tableau database, is inserted into a SQL database and is able to be run daily and inserted into Atlas. If multiple queries are found in a report, there will be a database entry for each query.
+## 🔧 How Does it Work?
 
-### What It Does
+1.  Logs in to the Tableau server via SSH and connects to the Tableau PSQL Admin account in the workgroup database
+2.  The query will create `.twbx` and `.twb` files containing SQL queries related to the workbooks stored in Tableau
+3.  The files retrieved are placed in the `TwbxFiles` folder and any zipped folders are unzipped
+4.  All XML files are parsed and the server, database name, and SQL queries are pulled from each along with the the respective workbook
+5.  Connection to SQL database is established and all tables are truncated so as not to duplicate data
+6.  All PSQL queries are run and data pulled is stored in SQl tables
 
-It logs in to the Tableau server and connects to the Tableau PSQL Admin account in the workgroup database.
+## 🏃 Getting Started
 
-1.  The query will create .twbx and .twb files containing SQL queries related to the workbooks stored in Tableau
-2.  The files retrieved are placed in the "TwbxFiles" folder and any zipped folders are unzipped
-3.  All XML files are parsed and the server, database name, and SQL queries are pulled from each along with the the respective workbook
-4.  Connection to SQL database is established to hold Tableau data. All tables are truncated so as not to duplicate data
-5.  All PSQL queries are run and data pulled is stored in SQl tables
+-   Get the code `git clone git@github.com:atlas-bi/Tableau-Metadata-Exporter.git`
+-   Create the Atlas Staging database tables. Run the `create_tables.sql` script in your `atlas_staging` database
+-   Install the project depenedencies `poetry install`, or `pip install` the dependencies listed in the `pyproject.toml` file
+-   Set parameters (see below)
+-   Run `poetry run python main.py`, or `python main.py`
 
-## How To Run
+## ⚙️Parameters
 
-### First, install poetry
-
-This script uses [poetry](https://python-poetry.org/docs/) as the python package manager.
-
-### Next, install Python packages
-
-Since this script utilizes poetry, just run:
-
-```sh
-poetry install
+The python script accepts environment variables. This is the recommended way to run the script. You can also create a `.env` file to hold the parameters.
+```bash
+# Tableau's psql admin account. Documentation on Tabeau's website for getting the admin password.
+PSQLADMIN=postgres://tblwgadmin:password@localhost:8060/workgroup
+# Tableau's psql ro account
+PSQLRO=postgres://readonly:password@hostname:8060/workgroup
+# Atlas Staging database connection
+SQLSERVER=DRIVER={ODBC Driver 17 for SQL Server};SERVER=sqlServer;DATABASE=atlas_staging;UID=joe;PWD=12345
+# SSH Connection to Tableau Server. Old servers will need to install OpenSSH
+SSHHOST=tableauServer
+SSHUSERNAME=mr_cool
+SSHPASSWORD=12345
+# Url to Tableau
+TABLEAUURL=https://tableau.example.com
 ```
 
-### Create Database
-
-```SQL
-CREATE DATABASE [TableauSQL]
- GO
-```
-
-### Create Tables
-
-Run create_tables.sql
-
-### Create settings.py file
-
-For the settings.py file, the Tableau admin and readonly passwords will be needed.
+Here's a few steps to get the Tableau PSQL admin and readonly passwords.
 
 Navigate to the Tableau server and open command prompt.
 ```py
@@ -58,34 +64,7 @@ tsm configuration get -k pgsql.adminpassword
 tsm configuration get -k pgsql.readonly_password
 ```
 
-```py
-# readonly account
-PSQL_Server = ("dbname=database_name user=username host=hostname password=password port=port")
-
-SQL_Server = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=server_name;DATABASE=database_name;UID=username;PWD=password"
-
-SSH_Host = "SSH_server_name"
-SSH_Username = "username"
-SSH_Password = "password"
-
-# admin account
-PG_PASSWORD="password"
-PG_HOST="localhost"
-PG_PORT=8060
-PG_DB="workgroup"
-PG_USER="tblwgadmin"
-
-Sleep: int = 5 # number of seconds
-
-```
-
-### Run
-
-```sh
-poetry run python main.py
-```
-
-## Additional Information
+## 📝 Notes
 
 Some of the PSQL queries that are run look at user and group data. To access these tables, try this [guide](https://github.com/tableau/community-tableau-server-insights). The user data is mostly found in the ts_users data source.
 

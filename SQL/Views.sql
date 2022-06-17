@@ -1,7 +1,7 @@
 select
   views.id,
   views.name,
-  'https://tableau/#/views/' || workbooks.repository_url || '/' || views.sheet_id,
+  'TABLEAUURL/#/views/' || workbooks.repository_url || '/' || views.sheet_id,
   views.created_at AT TIME ZONE 'UTC' AT TIME ZONE 'US/Central',
   views.updated_at AT TIME ZONE 'UTC' AT TIME ZONE 'US/Central',
   views.index,
