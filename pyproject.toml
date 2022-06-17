@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "TableauSQL"
 version = "0.0.0"
-description = "Get SQL from Tableau XML"
-authors = ["Sean Pickering"]
+description = "Tableau Metadata Scraper"
+authors = ["Sean Pickering", "Christopher Pickering"]
 license = "GPL-3.0-or-later"
 
 [tool.poetry.dependencies]
