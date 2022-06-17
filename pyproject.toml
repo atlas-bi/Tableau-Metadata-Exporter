@@ -7,14 +7,14 @@ license = "GPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-lxml = "^4.6.2"
+lxml = "^4.6.5"
 tox = "^3.21.1"
 pyodbc = "^4.0.30"
 mysql-connector-python = "^8.0.23"
 psycopg2 = "^2.8.6"
 paramiko = "^2.10.1"
 pre-commit = "^2.9.3"
-sqlfluff = "^0.3.6"
+sqlfluff = "^0.13.0"
 requests = "^2.25.1"
 
 [tool.poetry.dev-dependencies]
