@@ -511,7 +511,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "sqlfluff"
-version = "0.13.2"
+version = "1.0.0"
 description = "The SQL Linter for Humans"
 category = "main"
 optional = false
@@ -654,7 +654,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "8556ba3a8e5f3fa25a61286ee0c0ea3599708b559664459e0e7ac61565bd04f0"
+content-hash = "58a8a1ae7bb717da19199fe9ffab890ca70f8e6ce1b89521e45df78cee1b59da"
 
 [metadata.files]
 appdirs = [
@@ -1174,8 +1174,8 @@ six = [
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 sqlfluff = [
-    {file = "sqlfluff-0.13.2-py3-none-any.whl", hash = "sha256:8421d5b04697442dd797bccb96e2cdb14c43a7c75cdbd90349886fe0010f3cec"},
-    {file = "sqlfluff-0.13.2.tar.gz", hash = "sha256:c386fbbdfb8ea6a7815ebe66d11f264777e3112d24bb3233b356ef174218b77d"},
+    {file = "sqlfluff-1.0.0-py3-none-any.whl", hash = "sha256:3bd945622355c9a7f0a44161db4e0e3b3bad0bfeb735f09940f1b4efff40ec64"},
+    {file = "sqlfluff-1.0.0.tar.gz", hash = "sha256:f3edd24506271cabaa39732500e3c0c40bcfab2ec9f4ac3bfb80ceae05b24936"},
 ]
 tblib = [
     {file = "tblib-1.7.0-py2.py3-none-any.whl", hash = "sha256:289fa7359e580950e7d9743eab36b0691f0310fce64dee7d9c31065b8f723e23"},
