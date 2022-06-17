@@ -14,7 +14,7 @@ mysql-connector-python = "^8.0.23"
 psycopg2 = "^2.8.6"
 paramiko = "^2.7.2"
 pre-commit = "^2.9.3"
-sqlfluff = "^0.3.6"
+sqlfluff = "^0.13.0"
 requests = "^2.25.1"
 
 [tool.poetry.dev-dependencies]
