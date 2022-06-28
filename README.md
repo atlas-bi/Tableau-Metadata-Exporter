@@ -8,7 +8,7 @@
  <a href="https://sonarcloud.io/project/overview?id=atlas-bi_Tableau-Metadata-Exporter"><img alt="maintainability" src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_Tableau-Metadata-Exporter&metric=sqale_rating"></a>
  <a href=""><img alt="security" src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_Tableau-Metadata-Exporter&metric=security_rating" /></a>
  <a href="https://discord.gg/hdz2cpygQD"><img alt="discord chat" src="https://badgen.net/discord/online-members/hdz2cpygQD/" /></a>
- <a href="https://github.com/atlas-bi/atlas-bi-library/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/Tableau-Metadata-Exporter" /></a>
+ <a href="https://github.com/atlas-bi/Tableau-Metadata-Exporter/releases"><img alt="latest release" src="https://badgen.net/github/release/atlas-bi/Tableau-Metadata-Exporter" /></a>
 </p>
 
 

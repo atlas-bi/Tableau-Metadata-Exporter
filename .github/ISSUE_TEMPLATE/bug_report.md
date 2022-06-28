@@ -11,8 +11,8 @@ labels: bug
     Have you...
 -->
 
-- [ ] I'm on the [latest version](https://github.com/atlas-bi/atlas-bi-library-etl)
-- [ ] I've searched the [issues](https://github.com/atlas-bi/atlas-bi-library-etl/issues)
+- [ ] I'm on the [latest version](https://github.com/atlas-bi/Tableau-Metadata-Exporter)
+- [ ] I've searched the [issues](https://github.com/atlas-bi/Tableau-Metadata-Exporter/issues)
 - [ ] I've read the [docs](https://www.atlas.bi/docs/bi_library/etl/)
 
 ## System Info
