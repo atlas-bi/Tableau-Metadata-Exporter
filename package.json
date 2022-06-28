@@ -1,6 +1,6 @@
 {
   "name": "atlas-etl-tableau-public",
-  "version": "1.0.1",
+  "version": "1.0.1-alpha.1",
   "description": "Tableau Metadata Scraper",
   "private": true,
   "main": "index.js",
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GLP-3.0-or-later",
   "bugs": {
     "url": "https://github.com/atlas-bi/Tableau-Metadata-Exporter/issues"
   },
