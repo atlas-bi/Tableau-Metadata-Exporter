@@ -1,6 +1,6 @@
 {
   "name": "atlas-etl-tableau-public",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Tableau Metadata Scraper",
   "private": true,
   "main": "index.js",
@@ -26,7 +26,7 @@
     "@semantic-release/github": "8.0.5",
     "@semantic-release/npm": "9.0.1",
     "@semantic-release/release-notes-generator": "10.0.3",
-    "commitizen": "4.2.4",
+    "commitizen": "4.2.5",
     "cz-conventional-changelog": "3.3.0"
   },
   "config": {
