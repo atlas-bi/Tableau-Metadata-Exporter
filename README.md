@@ -4,7 +4,7 @@
     <a href="https://www.atlas.bi" target="_blank">Website</a> • <a href="https://demo.atlas.bi" target="_blank">Demo</a> • <a href="https://www.atlas.bi/docs/bi-library/" target="_blank">Documentation</a> • <a href="https://discord.gg/hdz2cpygQD" target="_blank">Chat</a>
 </p>
 <p align="center">
- <a href="https://www.codacy.com/gh/Riverside-Healthcare/Tableau-Metadata-Exporter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Riverside-Healthcare/Tableau-Metadata-Exporter&amp;utm_campaign=Badge_Grade"><img alt="codacy" src="https://app.codacy.com/project/badge/Grade/b6bec0c189e240228baca3941e851e5b"></a>
+ <a href="https://www.codacy.com/gh/atlas-bi/Tableau-Metadata-Exporter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/Tableau-Metadata-Exporter&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/fa2ce293d2c04df3bfe36f9bb3115973"/></a>
  <a href="https://sonarcloud.io/project/overview?id=atlas-bi_Tableau-Metadata-Exporter"><img alt="maintainability" src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_Tableau-Metadata-Exporter&metric=sqale_rating"></a>
  <a href=""><img alt="security" src="https://sonarcloud.io/api/project_badges/measure?project=atlas-bi_Tableau-Metadata-Exporter&metric=security_rating" /></a>
  <a href="https://discord.gg/hdz2cpygQD"><img alt="discord chat" src="https://badgen.net/discord/online-members/hdz2cpygQD/" /></a>
