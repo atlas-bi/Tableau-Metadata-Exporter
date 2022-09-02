@@ -50,7 +50,7 @@ session.connect(
 # remove old lines
 stdin, stdout, stderr = session.exec_command("del /f /Q C:\\Users\\Public\\ETL_SQL\\")
 
-if len(stderr.readlines()):
+if len(stderr.readlines() > 0):
     err = "".join(stderr.readlines())
     raise Exception(f"Failed to remove old files.\n{err}")
 
@@ -59,7 +59,7 @@ stdin, stdout, stderr = session.exec_command(
     f"cd \"C:\\Program Files\\Tableau\\Tableau Server\\packages\\pgsql*\" && cd bin && SET PGPASSWORD={PSQLADMIN.password}& psql -U {PSQLADMIN.username} -a -d {PSQLADMIN.path.replace('/','')} -h {PSQLADMIN.hostname} -p {PSQLADMIN.port} -c \"SELECT LO_EXPORT(OID, 'C:\\Users\\Public\\ETL_SQL\\' || REPO_TEMP.ID || '_' || REPO_TEMP.REPOSITORY_URL || LO_TEMP.FILETYPE)  FROM  (SELECT W.ID,  W.REPOSITORY_URL,  RD.CONTENT AS oid FROM WORKBOOKS W  INNER JOIN REPOSITORY_DATA RD ON COALESCE(W.DATA_ID, W.REDUCED_DATA_ID) = RD.TRACKING_ID) AS repo_temp  LEFT JOIN  (SELECT LOID,  CASE  WHEN SUBSTRING(DATA  FROM 1 FOR 4) = 'PK\\003\\004' THEN '.twbx' ELSE '.twb'  END AS filetype  FROM PG_LARGEOBJECT WHERE PG_LARGEOBJECT.PAGENO = 0  ) AS lo_temp ON REPO_TEMP.OID = LO_TEMP.LOID;\""
 )
 
-if len(stderr.readlines()):
+if len(stderr.readlines() > 0):
     err = "".join(stderr.readlines())
     raise Exception(f"Failed to remove old files.\n{err}")
 
