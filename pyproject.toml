@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "TableauSQL"
-version = "1.0.1-alpha.1"
+version = "1.0.1"
 description = "Tableau Metadata Scraper"
 authors = ["Sean Pickering", "Christopher Pickering"]
 license = "GPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-lxml = "^4.6.5"
+lxml = "^4.9.1"
 tox = "^3.21.1"
 pyodbc = "^4.0.30"
 mysql-connector-python = "^8.0.23"
