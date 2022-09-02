@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "TableauSQL"
-version = "1.0.1-alpha.1"
+version = "1.0.1"
 description = "Tableau Metadata Scraper"
 authors = ["Sean Pickering", "Christopher Pickering"]
 license = "GPL-3.0-or-later"
 
 [tool.poetry.dependencies]
-python = "^3.7"
-lxml = "^4.6.5"
+python = "^3.7.2"
+lxml = "^4.9.1"
 tox = "^3.21.1"
 pyodbc = "^4.0.30"
 mysql-connector-python = "^8.0.23"
@@ -20,6 +20,9 @@ python-dotenv = "^0.20.0"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.9.3"
+isort = "^5.10.1"
+black = "^22.8.0"
+pylint = "^2.15.0"
 
 [tool.black]
 max_line_length = 99
@@ -54,7 +57,7 @@ build-backend = "poetry.core.masonry.api"
 ignore = [".git","__pycache__",".tox",".venv","venv","public_publish"]
 
 [tool.pylint.messages_control]
-disable = "C0301, C0209, C0103, C0330, C0326, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911"
+disable = "C0301, C0209, C0103, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911, I1101"
 
 [tool.pylint.format]
 max-line-length = 99
