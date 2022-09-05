@@ -1,6 +1,6 @@
 {
   "name": "atlas-etl-tableau-public",
-  "version": "1.0.4",
+  "version": "1.0.2",
   "description": "Tableau Metadata Scraper",
   "private": true,
   "main": "index.js",
