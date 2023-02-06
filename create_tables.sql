@@ -37,7 +37,8 @@ GO
   CREATE TABLE [raw].[tableau-rundata](
     [EventDate] [datetime] NULL,
     [UserID] [int] NULL,
-    [DashboardID] [int] NULL
+    [DashboardID] [int] NULL [Nviews] [int] NULL,
+    [Series] [int] NULL
   ) ON [PRIMARY]
 GO
   CREATE TABLE [raw].[tableau-users](
