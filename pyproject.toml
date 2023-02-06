@@ -6,7 +6,7 @@ authors = ["Sean Pickering", "Christopher Pickering"]
 license = "GPL-3.0-or-later"
 
 [tool.poetry.dependencies]
-python = "^3.7.2"
+python = "^3.8.2"
 lxml = "^4.9.1"
 tox = "^4.0.0"
 pyodbc = "^4.0.30"
