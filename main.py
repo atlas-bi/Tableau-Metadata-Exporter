@@ -101,7 +101,6 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
             continue
         dict_db = {}
         for node in named_connections.getchildren():
-
             inner_connection = node.find("connection")
 
             dict_db[node.get("name")] = {
@@ -119,10 +118,8 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
             }
 
         for node in connection.getchildren():
-
             # relations with child queries
             if node.tag.endswith("relation") and node.findall("relation"):
-
                 for childnode in node.findall("relation"):
                     this_conn = {}
                     conn_string = (
