@@ -16,7 +16,7 @@ paramiko = "^3.0.0"
 pre-commit = "^3.0.0"
 sqlfluff = "^1.0.0"
 requests = "^2.25.1"
-python-dotenv = "^0.21.0"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^3.0.0"
