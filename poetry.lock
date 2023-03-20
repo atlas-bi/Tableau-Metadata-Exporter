@@ -1392,14 +1392,14 @@ testing-integration = ["build[virtualenv]", "filelock (>=3.4.0)", "jaraco.envs (
 
 [[package]]
 name = "sqlfluff"
-version = "1.4.5"
+version = "2.0.1"
 description = "The SQL Linter for Humans"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "sqlfluff-1.4.5-py3-none-any.whl", hash = "sha256:10b193ee009046f8fe3af9d1895f767b691635653cccc8698bc01eee2ccb69df"},
-    {file = "sqlfluff-1.4.5.tar.gz", hash = "sha256:68a8abde2fa22b76a20d908e22087e2e12b0e4a2085be2ea955ff6305b0fea30"},
+    {file = "sqlfluff-2.0.1-py3-none-any.whl", hash = "sha256:7ffcc9b753d6bab8bc70df6a4cbd66a52fdb5e4e4a272ba92187f781caffc565"},
+    {file = "sqlfluff-2.0.1.tar.gz", hash = "sha256:e869af256f1973bea86b70b1018c47a21e7430e2b8f142558177c6c73763a2fc"},
 ]
 
 [package.dependencies]
@@ -1414,7 +1414,7 @@ pytest = "*"
 pyyaml = ">=5.1"
 regex = "*"
 tblib = "*"
-toml = "*"
+toml = {version = "*", markers = "python_version < \"3.11\""}
 tqdm = "*"
 typing-extensions = "*"
 
@@ -1642,4 +1642,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.2"
-content-hash = "eb85276d8ed9965889d5eb9f5d5145333b6ae4a20b202a438761a4662d373768"
+content-hash = "783fd3bce35d242ef1469958821c940b85589a598819105bbfe661e1808ef803"
