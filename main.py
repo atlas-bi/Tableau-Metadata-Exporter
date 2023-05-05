@@ -148,7 +148,7 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
                             else ""
                         )
                         + "*/\n\n"
-                        + (childnode.text)
+                        + (childnode.text or "")
                     )
                     this_conn["ReportId"] = (
                         tree.getroot().find("repository-location").get("id")
