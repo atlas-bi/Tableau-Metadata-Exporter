@@ -18,11 +18,12 @@ sqlfluff = "^2.0.0"
 requests = "^2.25.1"
 python-dotenv = "^1.0.0"
 
+
 [tool.poetry.dev-dependencies]
 pre-commit = "^3.0.0"
 isort = "^5.10.1"
 black = "^23.0.0"
-pylint = "^2.15.0"
+ruff = "^0.0.265"
 
 [tool.black]
 max_line_length = 99
@@ -53,16 +54,23 @@ sections="FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.pylint.master]
-ignore = [".git","__pycache__",".tox",".venv","venv","public_publish"]
 
-[tool.pylint.messages_control]
-disable = "C0301, C0209, C0103, E0401, C0413, C0411, R0902, C0415, C0302, R0912, R0915, R0914, R0401, R0801, R0913, R0903, R0911, I1101, W0719"
-
-[tool.pylint.format]
-max-line-length = 99
-max-module-lines=1000
-
-[tool.pylint.basic]
-good-names = "i,j,k,ex,Run,x,id,e,me,l,_"
-include-naming-hint="no"
+[tool.ruff]
+line-length = 146
+select = [
+    "A",
+    "C4",
+    "D",
+    "DJ",
+    "E",
+    "F",
+    "I",
+    "N",
+    "PL",
+    "PT",
+    "SIM",
+    "T20",
+    "W",
+]
+target-version = "py311"
+ignore = ["D203", "D213", "E501", "SIM112"]
