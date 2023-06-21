@@ -56,7 +56,7 @@ if len(stderr.readlines()) > 0:
 
 # note, there must be NO SPACE between your password and the "&&"!
 stdin, stdout, stderr = session.exec_command(
-    f"cd \"C:\\Program Files\\Tableau\\Tableau Server\\packages\\pgsql*\" && cd bin && SET PGPASSWORD={PSQLADMIN.password}& psql -U {PSQLADMIN.username} -a -d {PSQLADMIN.path.replace('/','')} -h {PSQLADMIN.hostname} -p {PSQLADMIN.port} -c \"SELECT LO_EXPORT(OID, 'C:\\Users\\Public\\ETL_SQL\\' || REPO_TEMP.ID || '_' || REPO_TEMP.REPOSITORY_URL || LO_TEMP.FILETYPE)  FROM  (SELECT W.ID,  W.REPOSITORY_URL,  RD.CONTENT AS oid FROM WORKBOOKS W  INNER JOIN REPOSITORY_DATA RD ON COALESCE(W.DATA_ID, W.REDUCED_DATA_ID) = RD.TRACKING_ID) AS repo_temp  LEFT JOIN  (SELECT LOID,  CASE  WHEN SUBSTRING(DATA  FROM 1 FOR 4) = 'PK\\003\\004' THEN '.twbx' ELSE '.twb'  END AS filetype  FROM PG_LARGEOBJECT WHERE PG_LARGEOBJECT.PAGENO = 0  ) AS lo_temp ON REPO_TEMP.OID = LO_TEMP.LOID;\""
+    f"D: && cd \"Tableau Server\\packages\\pgsql*\" && cd bin && SET PGPASSWORD={PSQLADMIN.password}& psql -U {PSQLADMIN.username} -a -d {PSQLADMIN.path.replace('/','')} -h {PSQLADMIN.hostname} -p {PSQLADMIN.port} -c \"SELECT LO_EXPORT(OID, 'C:\\Users\\Public\\ETL_SQL\\' || REPO_TEMP.ID || '_' || REPO_TEMP.REPOSITORY_URL || LO_TEMP.FILETYPE)  FROM  (SELECT W.ID,  W.REPOSITORY_URL,  RD.CONTENT AS oid FROM WORKBOOKS W  INNER JOIN REPOSITORY_DATA RD ON COALESCE(W.DATA_ID, W.REDUCED_DATA_ID) = RD.TRACKING_ID) AS repo_temp  LEFT JOIN  (SELECT LOID,  CASE  WHEN SUBSTRING(DATA  FROM 1 FOR 4) = 'PK\\003\\004' THEN '.twbx' ELSE '.twb'  END AS filetype  FROM PG_LARGEOBJECT WHERE PG_LARGEOBJECT.PAGENO = 0  ) AS lo_temp ON REPO_TEMP.OID = LO_TEMP.LOID;\""
 )
 
 if len(stderr.readlines()) > 0:
@@ -193,6 +193,7 @@ cur.execute(
     DELETE FROM [raw].[tableau-users] WHERE 1=1;
     DELETE FROM [raw].[tableau-rundata] WHERE 1=1;
     DELETE FROM [raw].[tableau-reports] WHERE 1=1;
+    DELETE FROM [raw].[tableauSubscriptions] WHERE 1=1;
     """
 )
 
@@ -221,7 +222,11 @@ for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
             (ParentID, ChildID, [Index]) VALUES (?, ?, ?)"""
             cur.executemany(sql, results)
             cur.commit()
-
+        elif fnmatch.fnmatch(my_file, "*ProjAndWork.sql"):
+            sql = """INSERT INTO [raw].[tableau-hierarchy]
+            (ParentID, ChildID, [Index]) VALUES (?, ?, ?)"""
+            cur.executemany(sql, results)
+            cur.commit()
         elif fnmatch.fnmatch(my_file, "*Groups.sql"):
             sql = """INSERT INTO [raw].[tableau-groups] (UserID, GroupName) VALUES (?, ?)"""
             cur.executemany(sql, results)
@@ -249,6 +254,14 @@ for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
             cur.executemany(sql, results)
             cur.commit()
 
+        elif fnmatch.fnmatch(my_file, "*Projects.sql"):
+            sql = """
+               INSERT INTO [raw].[tableau-reports]
+                (Type, ID, Name, Description, Created, Updated, URL, OwnerID)
+                VALUES ('Project', ?, ?, ?, ?, ?, ?, ?)
+                """
+            cur.executemany(sql, results)
+            cur.commit()
         elif fnmatch.fnmatch(my_file, "*Workbooks.sql"):
             sql = """
                 INSERT INTO [raw].[tableau-reports]
@@ -257,7 +270,14 @@ for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
                 """
             cur.executemany(sql, results)
             cur.commit()
-
+        elif fnmatch.fnmatch(my_file, "*Subscriptions.sql"):
+            sql = """
+                INSERT INTO raw.tableauSubscriptions
+                (Id, TargetType, TargetId, Created, LastRun, UserId, UserName, Description, Details)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """
+            cur.executemany(sql, results)
+            cur.commit()
 connection.commit()
 connection.close()
 conn.close()
