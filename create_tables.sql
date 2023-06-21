@@ -37,7 +37,8 @@ GO
   CREATE TABLE [raw].[tableau-rundata](
     [EventDate] [datetime] NULL,
     [UserID] [int] NULL,
-    [DashboardID] [int] NULL [Nviews] [int] NULL,
+    [DashboardID] [int] NULL,
+    [Nviews] [int] NULL,
     [Series] [int] NULL
   ) ON [PRIMARY]
 GO
@@ -46,3 +47,17 @@ GO
     [Username] [nvarchar](max) NULL
   ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+
+CREATE TABLE raw.TableauSubscriptions
+(
+Id int NULL
+,TargetType nVarchar(50) NULL
+,TargetId int NULL
+, Created datetime NULL
+, LastRun dateTime NULL
+, UserId int NULL
+, UserName nVarchar(50) NULL
+, Description nVarchar(250) NULL
+, Details nVarchar(1000) NULL
+
+)
