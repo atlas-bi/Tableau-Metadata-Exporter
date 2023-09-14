@@ -1,7 +1,7 @@
 <h1 align="center">Tableau Metadata Exporter</h1>
 <h4 align="center">Atlas BI Library ETL | Atlas Supplementary Tableau ETL</h4>
 <p align="center">
-    <a href="https://www.atlas.bi" target="_blank">Website</a> • <a href="https://demo.atlas.bi" target="_blank">Demo</a> • <a href="https://www.atlas.bi/docs/bi-library/" target="_blank">Documentation</a> • <a href="https://discord.gg/hdz2cpygQD" target="_blank">Chat</a>
+    <a href="https://www.atlas.bi" target="_blank">Website</a> • <a href="https://demo.atlas.bi" target="_blank">Demo</a> • <a href="https://www.atlas.bi/docs/library/" target="_blank">Documentation</a> • <a href="https://discord.gg/hdz2cpygQD" target="_blank">Chat</a>
 </p>
 <p align="center">
  <a href="https://www.codacy.com/gh/atlas-bi/Tableau-Metadata-Exporter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=atlas-bi/Tableau-Metadata-Exporter&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/fa2ce293d2c04df3bfe36f9bb3115973"/></a>
