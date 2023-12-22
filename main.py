@@ -193,6 +193,7 @@ cur.execute(
     DELETE FROM [raw].[tableau-users] WHERE 1=1;
     DELETE FROM [raw].[tableau-rundata] WHERE 1=1;
     DELETE FROM [raw].[tableau-reports] WHERE 1=1;
+    DELETE FROM [raw].[tableauSubscriptions] WHERE 1=1;
     """
 )
 
@@ -222,6 +223,12 @@ for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
             cur.executemany(sql, results)
             cur.commit()
 
+        elif fnmatch.fnmatch(my_file, "*ProjAndWork.sql"):
+            sql = """INSERT INTO [raw].[tableau-hierarchy]
+            (ParentID, ChildID, [Index]) VALUES (?, ?, ?)"""
+            cur.executemany(sql, results)
+            cur.commit()
+
         elif fnmatch.fnmatch(my_file, "*Groups.sql"):
             sql = """INSERT INTO [raw].[tableau-groups] (UserID, GroupName) VALUES (?, ?)"""
             cur.executemany(sql, results)
@@ -240,11 +247,27 @@ for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
             cur.executemany(sql, results)
             cur.commit()
 
+        elif fnmatch.fnmatch(my_file, "*Projects.sql"):
+            sql = """INSERT INTO [raw].[tableau-reports]
+            (Type, ID, Name, Description, Created, Updated, URL, OwnerID)
+            VALUES ('Project', ?, ?, ?, ?, ?, ?, ?)"""
+            cur.executemany(sql, results)
+            cur.commit()
+
         elif fnmatch.fnmatch(my_file, "*Views.sql"):
             sql = """
                 INSERT INTO [raw].[tableau-reports]
                 (Type, ID, Name, URL, Created, Updated, [Index], OwnerID)
                 VALUES ('Dashboard', ?, ?, ?, ?, ?, ?, ?)
+                """
+            cur.executemany(sql, results)
+            cur.commit()
+
+        elif fnmatch.fnmatch(my_file, "*Subscriptions.sql"):
+            sql = """
+                INSERT INTO raw.tableauSubscriptions
+                (Id, TargetType, TargetId, Created, LastRun, UserId, UserName, Description, Details)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
             cur.executemany(sql, results)
             cur.commit()
