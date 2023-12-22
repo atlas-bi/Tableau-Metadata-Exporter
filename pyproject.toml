@@ -70,8 +70,7 @@ select = [
     "PT",
     "SIM",
     "T20",
-    "SIM114",
     "W",
 ]
 target-version = "py311"
-ignore = ["D203", "D213", "E501", "SIM112"]
+ignore = ["D203", "D213", "E501", "SIM112", "SIM114",]
