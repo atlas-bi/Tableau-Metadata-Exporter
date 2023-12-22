@@ -1,4 +1,4 @@
-select 
+select
 sub.Id as Id
 , sub.target_type as TargetType
 , sub.target_id as TargetId
