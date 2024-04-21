@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "TableauSQL"
-version = "1.0.5"
+version = "1.0.6"
 description = "Tableau Metadata Scraper"
 authors = ["Sean Pickering", "Christopher Pickering"]
 license = "GPL-3.0-or-later"
@@ -23,7 +23,7 @@ python-dotenv = "^1.0.0"
 pre-commit = "^3.0.0"
 isort = "^5.10.1"
 black = "^23.0.0"
-ruff = "^0.3.0"
+ruff = "^0.4.0"
 
 [tool.black]
 max_line_length = 99
