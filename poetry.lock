@@ -1256,14 +1256,14 @@ testing-integration = ["build[virtualenv]", "filelock (>=3.4.0)", "jaraco.envs (
 
 [[package]]
 name = "sqlfluff"
-version = "2.3.5"
+version = "3.2.0"
 description = "The SQL Linter for Humans"
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "sqlfluff-2.3.5-py3-none-any.whl", hash = "sha256:2ca095a2f2cced5573a83fc8a6d2aceb36edd21a8c4c5d8099b6544e386d86a1"},
-    {file = "sqlfluff-2.3.5.tar.gz", hash = "sha256:fd77ef5a41ebfa798235a5b28bcfa71f7521e9336159a08b40b545953e84c3c3"},
+    {file = "sqlfluff-3.2.0-py3-none-any.whl", hash = "sha256:f80832d4d280e8d7cb05afbd77634b3282b757d00bf513a428fcf4ed670634d8"},
+    {file = "sqlfluff-3.2.0.tar.gz", hash = "sha256:65d91dac2b27a248fb3d388d3c3f91c0c704bfa77e6b10b72a599a684795fe76"},
 ]
 
 [package.dependencies]
@@ -1281,7 +1281,6 @@ regex = "*"
 tblib = "*"
 toml = {version = "*", markers = "python_version < \"3.11\""}
 tqdm = "*"
-typing-extensions = "*"
 
 [[package]]
 name = "tblib"
@@ -1372,7 +1371,7 @@ telegram = ["requests"]
 name = "typing-extensions"
 version = "4.7.1"
 description = "Backported and Experimental Type Hints for Python 3.7+"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1438,4 +1437,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.2"
-content-hash = "26fc55f9373fc1872834aa87e9d80805c90c5030fb50ffdfd9d9ec49329d365f"
+content-hash = "9a6b7bc163d6906c5e3710a861b77d678c2c5072d403f4d71d01cb45f292836b"
