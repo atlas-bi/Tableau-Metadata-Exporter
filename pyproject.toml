@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "TableauSQL"
-version = "1.0.6"
+version = "1.0.7"
 description = "Tableau Metadata Scraper"
 authors = ["Sean Pickering", "Christopher Pickering"]
 license = "GPL-3.0-or-later"
@@ -14,7 +14,7 @@ mysql-connector-python = "^8.0.23"
 psycopg2 = "^2.8.6"
 paramiko = "^3.0.0"
 pre-commit = "^3.0.0"
-sqlfluff = "^2.0.0"
+sqlfluff = "^3.0.0"
 requests = "^2.25.1"
 python-dotenv = "^1.0.0"
 
