@@ -1,4 +1,5 @@
 """Tableau metadata exporter script."""
+
 import fnmatch
 import os
 import shutil
