@@ -1,5 +1,6 @@
 [tool.poetry]
 name = "TableauSQL"
+package-mode = false
 version = "1.0.4"
 description = "Tableau Metadata Scraper"
 authors = ["Sean Pickering", "Christopher Pickering"]
