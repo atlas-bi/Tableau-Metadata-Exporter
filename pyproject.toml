@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "TableauSQL"
-version = "1.0.4-alpha.1"
+version = "1.0.6"
 description = "Tableau Metadata Scraper"
 authors = ["Sean Pickering", "Christopher Pickering"]
 license = "GPL-3.0-or-later"
@@ -10,7 +10,7 @@ package-mode = false
 python = "^3.8.2"
 lxml = "^4.9.1"
 tox = "^4.0.0"
-pyodbc = "^4.0.30"
+pyodbc = "^5.0.0"
 mysql-connector-python = "^8.0.23"
 psycopg2 = "^2.8.6"
 paramiko = "^3.0.0"
@@ -24,7 +24,7 @@ python-dotenv = "^1.0.0"
 pre-commit = "^3.0.0"
 isort = "^5.10.1"
 black = "^23.0.0"
-ruff = "^0.0.287"
+ruff = "^0.4.0"
 
 [tool.black]
 max_line_length = 99
@@ -74,4 +74,4 @@ select = [
     "W",
 ]
 target-version = "py311"
-ignore = ["D203", "D213", "E501", "SIM112"]
+ignore = ["D203", "D213", "E501", "SIM112", "SIM114",]
