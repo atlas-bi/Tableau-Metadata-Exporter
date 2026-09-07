@@ -34,7 +34,7 @@ jobs:
       uses: snok/install-poetry@v1
 
     - name: 🚀 Semantic Release
-      uses: cycjimmy/semantic-release-action@v3
+      uses: cycjimmy/semantic-release-action@v5.0.2
       with:
         semantic_version: 18
       env:
