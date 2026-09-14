@@ -1,4 +1,5 @@
 """Tableau metadata exporter script."""
+
 import fnmatch
 import os
 import shutil
@@ -185,8 +186,7 @@ connection = pyodbc.connect(SQLSERVER)
 
 cur = connection.cursor()
 
-cur.execute(
-    """
+cur.execute("""
     DELETE FROM [raw].[tableau-queries] WHERE 1=1;
     DELETE FROM [raw].[tableau-hierarchy] WHERE 1=1;
     DELETE FROM [raw].[tableau-groups] WHERE 1=1;
@@ -194,8 +194,7 @@ cur.execute(
     DELETE FROM [raw].[tableau-rundata] WHERE 1=1;
     DELETE FROM [raw].[tableau-reports] WHERE 1=1;
     DELETE FROM [raw].[tableauSubscriptions] WHERE 1=1;
-    """
-)
+    """)
 
 for sql in output:
     cur.execute(
