@@ -1,4 +1,5 @@
 """Tableau metadata exporter script."""
+
 import fnmatch
 import os
 import shutil
@@ -20,18 +21,12 @@ from dotenv import load_dotenv
 from lxml import etree  # noqa: S410
 
 load_dotenv()
-PSQLADMIN = urlparse(
-    os.environ.get(
-        "PSQLADMIN", "postgres://tblwgadmin:password@localhost:8060/workgroup"
-    )
-)
-PSQLRO = urlparse(
-    os.environ.get("PSQLRO", "postgres://readonly:password@hostname:8060/workgroup")
-)
+PSQLADMIN = urlparse(os.environ.get("PSQLADMIN", "postgres://tblwgadmin:password@localhost:8060/workgroup"))
+PSQLRO = urlparse(os.environ.get("PSQLRO", "postgres://readonly:password@hostname:8060/workgroup"))
 SSHHOST = os.environ.get("SSHHOST", "tableauServer")
 SSHUSERNAME = os.environ.get("SSHUSERNAME", "mr_cool")
 SSHPASSWORD = os.environ.get("SSHPASSWORD", "12345")
-SLEEP = int(os.environ.get("Sleep", 5))
+SLEEP = int(os.environ.get("Sleep", "5"))
 TABLEAUURL = os.environ.get("TABLEAUURL", "https://tableau.example.com")
 SQLSERVER = os.environ.get(
     "SQLSERVER",
@@ -56,7 +51,7 @@ if len(stderr.readlines()) > 0:
 
 # note, there must be NO SPACE between your password and the "&&"!
 stdin, stdout, stderr = session.exec_command(
-    f"cd \"C:\\Program Files\\Tableau\\Tableau Server\\packages\\pgsql*\" && cd bin && SET PGPASSWORD={PSQLADMIN.password}& psql -U {PSQLADMIN.username} -a -d {PSQLADMIN.path.replace('/','')} -h {PSQLADMIN.hostname} -p {PSQLADMIN.port} -c \"SELECT LO_EXPORT(OID, 'C:\\Users\\Public\\ETL_SQL\\' || REPO_TEMP.ID || '_' || REPO_TEMP.REPOSITORY_URL || LO_TEMP.FILETYPE)  FROM  (SELECT W.ID,  W.REPOSITORY_URL,  RD.CONTENT AS oid FROM WORKBOOKS W  INNER JOIN REPOSITORY_DATA RD ON COALESCE(W.DATA_ID, W.REDUCED_DATA_ID) = RD.TRACKING_ID) AS repo_temp  LEFT JOIN  (SELECT LOID,  CASE  WHEN SUBSTRING(DATA  FROM 1 FOR 4) = 'PK\\003\\004' THEN '.twbx' ELSE '.twb'  END AS filetype  FROM PG_LARGEOBJECT WHERE PG_LARGEOBJECT.PAGENO = 0  ) AS lo_temp ON REPO_TEMP.OID = LO_TEMP.LOID;\""
+    f"cd \"C:\\Program Files\\Tableau\\Tableau Server\\packages\\pgsql*\" && cd bin && SET PGPASSWORD={PSQLADMIN.password}& psql -U {PSQLADMIN.username} -a -d {PSQLADMIN.path.replace('/', '')} -h {PSQLADMIN.hostname} -p {PSQLADMIN.port} -c \"SELECT LO_EXPORT(OID, 'C:\\Users\\Public\\ETL_SQL\\' || REPO_TEMP.ID || '_' || REPO_TEMP.REPOSITORY_URL || LO_TEMP.FILETYPE)  FROM  (SELECT W.ID,  W.REPOSITORY_URL,  RD.CONTENT AS oid FROM WORKBOOKS W  INNER JOIN REPOSITORY_DATA RD ON COALESCE(W.DATA_ID, W.REDUCED_DATA_ID) = RD.TRACKING_ID) AS repo_temp  LEFT JOIN  (SELECT LOID,  CASE  WHEN SUBSTRING(DATA  FROM 1 FOR 4) = 'PK\\003\\004' THEN '.twbx' ELSE '.twb'  END AS filetype  FROM PG_LARGEOBJECT WHERE PG_LARGEOBJECT.PAGENO = 0  ) AS lo_temp ON REPO_TEMP.OID = LO_TEMP.LOID;\""
 )
 
 if len(stderr.readlines()) > 0:
@@ -104,16 +99,8 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
             inner_connection = node.find("connection")
 
             dict_db[node.get("name")] = {
-                "database": (
-                    ("use %s;\n" % inner_connection.get("dbname"))
-                    if inner_connection.get("dbname") is not None
-                    else ""
-                ),
-                "server": (
-                    ("-- server: %s\n" % inner_connection.get("server"))
-                    if inner_connection.get("server") is not None
-                    else ""
-                ),
+                "database": (("use %s;\n" % inner_connection.get("dbname")) if inner_connection.get("dbname") is not None else ""),
+                "server": (("-- server: %s\n" % inner_connection.get("server")) if inner_connection.get("server") is not None else ""),
                 "one-time-sql": (inner_connection.get("one-time-sql") or ""),
             }
 
@@ -132,27 +119,13 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
                     this_conn["sql"] = (
                         conn_string
                         + "\n\n/*"
-                        + (
-                            ("connection: " + childnode.get("connection"))
-                            if childnode.get("connection")
-                            else ""
-                        )
-                        + (
-                            (" name: " + childnode.get("name"))
-                            if childnode.get("name")
-                            else ""
-                        )
-                        + (
-                            (" table: " + childnode.get("table"))
-                            if childnode.get("table")
-                            else ""
-                        )
+                        + (("connection: " + childnode.get("connection")) if childnode.get("connection") else "")
+                        + ((" name: " + childnode.get("name")) if childnode.get("name") else "")
+                        + ((" table: " + childnode.get("table")) if childnode.get("table") else "")
                         + "*/\n\n"
                         + (childnode.text or "")
                     )
-                    this_conn["ReportId"] = (
-                        tree.getroot().find("repository-location").get("id")
-                    )
+                    this_conn["ReportId"] = tree.getroot().find("repository-location").get("id")
                     output.append(this_conn)
 
             # relations with query
@@ -163,17 +136,9 @@ for my_file in (Path(__file__).parents[0] / "TwbxFiles").glob("*.twb"):
                         + dict_db[node.get("connection")].get("database", "")
                         + dict_db[node.get("connection")].get("one-time-sql", "")
                         + "\n\n/*"
-                        + (
-                            ("connection: " + node.get("connection"))
-                            if node.get("connection")
-                            else ""
-                        )
+                        + (("connection: " + node.get("connection")) if node.get("connection") else "")
                         + ((" name: " + node.get("name")) if node.get("name") else "")
-                        + (
-                            (" table: " + node.get("table"))
-                            if node.get("table")
-                            else ""
-                        )
+                        + ((" table: " + node.get("table")) if node.get("table") else "")
                         + "*/\n\n"
                         + (node.text)
                     ),
@@ -207,7 +172,7 @@ for sql in output:
 connection.commit()
 
 conn = psycopg2.connect(
-    f"dbname={PSQLRO.path.replace('/','')} user={PSQLRO.username} host={PSQLRO.hostname} password={PSQLRO.password} port={PSQLRO.port}"
+    f"dbname={PSQLRO.path.replace('/', '')} user={PSQLRO.username} host={PSQLRO.hostname} password={PSQLRO.password} port={PSQLRO.port}"
 )
 cursor = conn.cursor()
 
@@ -235,9 +200,7 @@ for my_file in (Path(__file__).parents[0] / "SQL").glob("*.sql"):
             cur.commit()
 
         elif fnmatch.fnmatch(my_file, "*Users.sql"):
-            sql = (
-                """INSERT INTO [raw].[tableau-users] (UserID, username) VALUES (?, ?)"""
-            )
+            sql = """INSERT INTO [raw].[tableau-users] (UserID, username) VALUES (?, ?)"""
             cur.executemany(sql, results)
             cur.commit()
 
