@@ -11,6 +11,7 @@
   "timezone": "America/Chicago",
   "schedule": ["before 10pm on the first day of the month"],
   "rangeStrategy": "bump",
+  "pinDigests": true,
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["before 10pm on the first day of the month"]
