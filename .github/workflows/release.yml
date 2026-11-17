@@ -9,12 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
+      pull-requests: write
     steps:
     - name: Checkout
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         fetch-depth: 0
-        token: ${{ secrets.RELEASE_PAT }}
+        persist-credentials: false
 
     - name: Setup uv
       uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
@@ -29,8 +31,12 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+      env:
+        GH_TOKEN: ${{ secrets.RELEASE_PAT || github.token }}
 
     - name: Semantic Release
       env:
-        GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        GH_TOKEN: ${{ secrets.RELEASE_PAT || github.token }}
+        GITHUB_TOKEN: ${{ secrets.RELEASE_PAT || github.token }}
       run: uv run --frozen --no-sync --no-build semantic-release version
