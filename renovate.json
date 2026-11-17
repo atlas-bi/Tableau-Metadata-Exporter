@@ -19,7 +19,7 @@
   "packageRules": [
     {
       "description": "Group all dependency updates into one monthly PR",
-      "matchManagers": ["pep621", "uv", "github-actions", "pre-commit"],
+      "matchManagers": ["pep621", "github-actions", "pre-commit"],
       "groupName": "all dependencies",
       "groupSlug": "all-dependencies"
     },
