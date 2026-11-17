@@ -29,9 +29,9 @@ A Python script pulls and parses XML data from PSQL readonly Tableau database. T
 
 -   Get the code `git clone git@github.com:atlas-bi/Tableau-Metadata-Exporter.git`
 -   Create the Atlas Staging database tables. Run the `create_tables.sql` script in your `atlas_staging` database
--   Install the project depenedencies `poetry install`, or `pip install` the dependencies listed in the `pyproject.toml` file
+-   Install [uv](https://docs.astral.sh/uv/), then install dependencies with `uv sync`
 -   Set parameters (see below)
--   Run `poetry run python main.py`, or `python main.py`
+-   Run `uv run python main.py`
 
 ## ⚙️Parameters
 
