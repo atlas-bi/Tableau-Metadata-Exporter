@@ -1,42 +1,31 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
-    "group:allNonMajor",
-    ":separateMultipleMajorReleases",
-    ":ignoreUnstable",
+    "config:recommended",
     ":enableVulnerabilityAlertsWithLabel(security)",
-    ":rebaseStalePrs",
-    ":npm",
-    "npm:unpublishSafe"
+    ":rebaseStalePrs"
   ],
   "baseBranches": ["dev"],
-  "bumpVersion": "patch",
   "commitMessagePrefix": "chore(deps)",
   "labels": ["maintenance", "renovate"],
+  "timezone": "America/Chicago",
+  "schedule": ["before 10pm on the first day of the month"],
+  "rangeStrategy": "bump",
+  "pinDigests": true,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 10pm on the first day of the month"]
+  },
   "packageRules": [
+    {
+      "description": "Group all dependency updates into one monthly PR",
+      "matchManagers": ["pep621", "uv", "github-actions", "pre-commit"],
+      "groupName": "all dependencies",
+      "groupSlug": "all-dependencies"
+    },
     {
       "matchUpdateTypes": ["pin", "digest", "minor", "patch"],
       "automerge": true
-    },
-    {
-      "matchDepTypes": ["devDependencies"],
-      "automerge": true
-    },
-    {
-      "extends": "packages:linters",
-      "groupName": "linters",
-      "automerge": true
-    },
-    {
-      "extends": "packages:test",
-      "groupName": "test packages",
-      "automerge": true
-    },
-    {
-      "matchDepTypes": ["devDependencies"],
-      "automerge": true
     }
-  ],
-  "schedule": ["before 10pm on Sunday"],
-  "timezone": "America/Chicago"
+  ]
 }
